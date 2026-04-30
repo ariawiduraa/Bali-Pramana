@@ -1,0 +1,296 @@
+================================================================================
+LAPORAN TUGAS 02: PERANCANGAN FRONT-END (REACT & LARAVEL INERTIA)
+MATA KULIAH: PEMROGRAMAN WEB BERBASIS FRAMEWORK
+================================================================================
+
+A. IDENTITAS PROJECT
+Judul Project : Bali Pramana
+Deskripsi     : Platform ekosistem digital cerdas untuk mempromosikan destinasi wisata alam (Hidden Gems) dan kuliner lokal autentik di Kabupaten Buleleng, Bali.
+Teknologi     : Laravel 11 (Backend), React 18 (Frontend), Inertia.js (Bridge), Tailwind CSS (Styling), MySQL (Database).
+Integrasi API : Groq API (Llama 3.1 AI Chatbot), Leaflet (Maps), Pannellum (360° Photo Viewer).
+
+
+--------------------------------------------------------------------------------
+TAHAP 1: PENENTUAN HALAMAN DAN STRUKTUR NAVIGASI
+--------------------------------------------------------------------------------
+Aplikasi dibangun dengan arsitektur peran pengguna (Role-Based Access Control): Admin, Contributor (Pemilik Usaha), dan Explorer (Wisatawan/Guest). Berikut adalah pemetaan struktur halamannya:
+
+1. Halaman Login & Autentikasi (`AuthScreen.jsx`)
+   - Merupakan Single Page Component yang menggabungkan form Login dan Register dengan transisi animasi state. Setelah login, Inertia.js akan me-redirect pengguna berdasarkan role mereka.
+
+2. Halaman Data Utama (Guest & Explorer)
+   - Beranda (`Home.jsx`): Bertindak sebagai landing page utama. Terdiri dari Hero Banner interaktif, Search Bar berdesain Glassmorphism, tombol Filter Kategori (Semua, Wisata Alam, Kuliner Lokal), opsi Pengurutan Harga (Sort by Price), dan Grid Kartu Destinasi.
+   - Peta Interaktif (`MapScreen.jsx`): Menampilkan seluruh destinasi yang telah disetujui (Approved) di atas peta interaktif menggunakan Leaflet.js, lengkap dengan popup informasi mini.
+
+3. Halaman Form & Dashboard (Admin & Contributor)
+   - Dashboard Admin (`AdminDashboard.jsx`): Antarmuka bagi Super Admin untuk memverifikasi entri destinasi baru. Terdapat dua aksi utama: Approve (langsung publish) dan Reject. Jika di-reject, sistem menampilkan modal form alasan penolakan.
+   - Dashboard Kontributor (`MyBusiness.jsx`): Antarmuka bagi pemilik bisnis untuk melakukan CRUD (Create, Read, Update, Delete) pada entri wisata/kuliner mereka. Terdapat form kompleks yang mendukung multi-upload gambar dan penanda khusus (checkbox) untuk foto 360 derajat.
+
+4. Halaman Tambahan & Komunikasi
+   - Mailbox (`Mailbox.jsx`): Sistem pesan 1-ke-1 khusus untuk Contributor untuk menerima pesan penolakan atau peringatan dari Admin. Di halaman ini juga terdapat tombol pintas WhatsApp/Email langsung ke Admin.
+   - Detail Destinasi (`DestinationDetail.jsx`): Halaman paling komprehensif. Menampilkan Tab Galeri biasa dan Virtual Tour 360°, detail harga, lokasi, tombol pintasan ke WhatsApp Guide & Google Maps, daftar aturan (Rules), serta form penambahan ulasan (Review & Star Rating).
+
+[User Flow (Alur Penggunaan)]
+- Wisatawan (Guest): Masuk Aplikasi -> Melihat Home -> Melakukan Pencarian/Filter -> Klik Destinasi -> Disuguhkan "Cultural Agreement Modal" (Peringatan Aturan Adat) -> Klik Setuju -> Masuk Halaman Detail Destinasi -> Chat Guide / Lihat 360°.
+- Kontributor (UMKM): Login -> Navigasi ke 'My Business' -> Input Data Form (Deskripsi, Harga, Kontak, Foto, Aturan) -> Submit -> Menunggu status 'Pending' berubah menjadi 'Approved'.
+- Admin: Login -> Dashboard -> Periksa Tab 'Waiting List' -> Review Konten -> Tekan Approve (Destinasi tayang di Home) atau Reject (Tulis alasan yang akan masuk ke Mailbox Kontributor).
+
+
+--------------------------------------------------------------------------------
+TAHAP 2: IMPLEMENTASI RANCANGAN FRONT-END
+--------------------------------------------------------------------------------
+Implementasi front-end memanfaatkan ekosistem React di dalam proyek Laravel melalui jembatan Inertia.js.
+
+1. Arsitektur Komponen Modular (Component-Based)
+   - `MobileLayout.jsx`: Komponen Layout Utama (HOC/Higher Order Component) yang membungkus semua halaman. Komponen ini memiliki logika untuk merender Header Desktop, Floating Bottom Navigation untuk mobile, Drawer Sidebar, dan Widget AI Chatbot.
+   - `DestinationCard.jsx`: Reusable UI component untuk menampilkan thumbnail destinasi secara konsisten di Home maupun Map.
+   - `Viewer360.jsx`: Komponen wrapper yang menginisialisasi script Pannellum Viewer melalui DOM manipulation dengan React `useRef`.
+
+2. Layout dan Konsistensi Desain
+   - Menggunakan pendekatan "Mobile-First Design" karena target pengguna mayoritas adalah wisatawan yang sedang mobile (menggunakan smartphone).
+   - Penggunaan *Floating Bottom Navigation* di perangkat mobile untuk kemudahan navigasi satu tangan (thumb-friendly).
+   - Pada desktop, navigasi bergeser menjadi *Pill-shaped Header* di bagian atas.
+
+3. Framework CSS (Tailwind CSS Kustom)
+   Semua styling dilakukan dengan Tailwind CSS yang di-ekstensi pada file `tailwind.config.js`:
+   - Penambahan warna tema khusus: `pramana-primary` (#2d6a4f), `pramana-accent` (#e07a5f), `pramana-bg`, dan `pramana-gold`.
+   - Konfigurasi Font: `DM Serif Display` untuk judul/headings (memberikan kesan premium) dan `Plus Jakarta Sans` untuk teks paragraf/body.
+   - Kelas utilitas kustom seperti `.glass` untuk efek latar belakang tembus pandang (backdrop-blur) dan animasi transisi kustom (`animate-float`, `animate-scale-in`).
+
+
+--------------------------------------------------------------------------------
+TAHAP 3: DOKUMENTASI DAN PENJELASAN KODE
+--------------------------------------------------------------------------------
+[CATATAN UNTUK MAHASISWA: SILAKAN INSERT SCREENSHOT HALAMAN PADA BAGIAN INI]
+(Disarankan menyisipkan screenshot: Halaman Home Mobile, Modal Cultural Agreement, Viewer 360, Form Dashboard Contributor, dan Chatbot Groq AI).
+
+1. Analisis Integrasi (Laravel & React via Inertia.js)
+   Aplikasi berjalan sebagai Single Page Application (SPA). Alih-alih merender file Blade atau membangun REST API yang terpisah, Laravel mengirim data langsung ke React.
+   Contoh alur di Backend (Laravel Controller):
+   `return Inertia::render('Home', ['destinations' => $destinationsData]);`
+   Di Frontend (React `Home.jsx`), data tersebut ditangkap langsung sebagai Props:
+   `const Home = ({ destinations }) => { ... }`
+
+2. Analisis Kode Penting (Snippet)
+
+   A. Logika Filter dan Sorting Client-Side (di Home.jsx)
+   Penggunaan React State (`useState`) untuk filter real-time tanpa me-reload halaman:
+   ```javascript
+   const [activeFilter, setActiveFilter] = useState('all');
+   const [searchQuery, setSearchQuery] = useState('');
+   const [sortBy, setSortBy] = useState('default');
+
+   const filtered = destinations.filter(item => {
+     const matchesFilter = activeFilter === 'all' || (activeFilter === 'wisata' && item.category === 'Wisata Alam');
+     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+     return matchesFilter && matchesSearch;
+   }).sort((a, b) => {
+     if (sortBy === 'price-low') return a.price - b.price;
+     if (sortBy === 'price-high') return b.price - a.price;
+     return 0;
+   });
+   ```
+
+   B. Integrasi AI Chatbot (Groq API di MobileLayout.jsx)
+   Menggunakan `fetch` API untuk memanggil LLM (Llama 3.1) guna memberikan rekomendasi cerdas kepada pengguna:
+   ```javascript
+   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+       'Authorization': `Bearer [GROQ_API_KEY]`
+     },
+     body: JSON.stringify({
+       model: 'llama-3.1-8b-instant',
+       messages: [
+         { role: 'system', content: 'Anda adalah asisten Bali Pramana. Bantu rekomendasi wisata Buleleng...' },
+         { role: 'user', content: chatInput }
+       ]
+     })
+   });
+   ```
+
+   C. Form Handling dengan Inertia.js (File Upload)
+   Pada `MyBusiness.jsx`, untuk mengatasi masalah multi-part form data bersamaan dengan state React:
+   ```javascript
+   const { data, setData, post } = useForm({ name: '', image: null });
+   post('/destinations', { forceFormData: true });
+   ```
+
+
+--------------------------------------------------------------------------------
+TAHAP 4: ANALISIS DESAIN ANTARMUKA (UI/UX)
+--------------------------------------------------------------------------------
+1. Tata Letak (Layout) & Aksesibilitas
+   Keputusan menggunakan sistem Grid pada halaman detail (gambar di kiri/atas, teks di kanan/bawah) bertujuan untuk memaksimalkan ruang layar. Area navigasi diletakkan di zona bawah pada versi mobile karena merupakan "thumb zone" (area nyaman ibu jari pengguna), meminimalisir peregangan jari pengguna saat menavigasi aplikasi.
+
+2. Visual & Estetika (Bali Nature Theme)
+   Tema aplikasi dibangun dengan konsistensi psikologi warna. Hijau hutan tua merepresentasikan elemen alam (Wisata Alam), sementara oranye/emas merepresentasikan kehangatan, budaya, dan kuliner (Kuliner Lokal). Kombinasi desain "Glassmorphism" (efek kaca blur) pada elemen floating memberikan kesan modern tanpa menutupi keindahan foto destinasi yang menjadi jualan utama platform.
+
+3. Pertimbangan Pengalaman Pengguna (UX)
+   - Edukasi Budaya (Cultural Agreement): Sebuah tantangan di pariwisata Bali adalah wisatawan yang kurang menghormati tempat suci/adat. Solusi UX-nya adalah menyisipkan "Modal Peringatan" yang mewajibkan pengguna menekan tombol "Saya Setuju" (berpakaian sopan, tidak buang sampah) sebelum mereka dapat membaca detail destinasi wisata.
+   - Asisten Pintar AI: Pengguna yang bingung mencari tujuan tidak perlu memfilter secara manual. Mereka cukup mengetik di *Floating Chatbot* Pramana Assistant, dan AI Llama 3.1 akan merekomendasikan destinasi secara interaktif. Tombol chatbot diposisikan secara presisi di `bottom-32` agar tidak tumpang tindih (overlap) dengan navigasi utama aplikasi.
+   - Real-time Validation: Pada form admin dan kontributor, error form Laravel langsung diikat ke state React, sehingga pesan error (misalnya: Harga wajib diisi) muncul secara real-time di bawah input box tanpa *page refresh*.
+
+4. Kendala dan Solusi dalam Perancangan Front-End
+   - KENDALA 1: Performa Fitur 360° Image. Awalnya penggunaan library React khusus Photo Sphere memakan memori tinggi dan merusak DOM saat navigasi pindah halaman (SPA behavior).
+     > SOLUSI 1: Melepaskan library NPM dan beralih meng-inject script library Vanilla JS murni (Pannellum) via CDN. Komponen React (`Viewer360.jsx`) digunakan hanya sebagai pembungkus `<div>` kosong dan di-inisialisasi via `useEffect()`. Ini menyelesaikan masalah memory leak dan sangat mengoptimalkan kecepatan rendering.
+   - KENDALA 2: Tampilan Mobile tertutup Navigasi Floating. Beberapa baris teks terakhir atau tombol paling bawah di halaman detail tidak dapat di-klik di HP karena tertutup oleh Bottom Navigation bar.
+     > SOLUSI 2: Mengimplementasikan dynamic padding-bottom (`pb-24`) pada container utama ( `<main>` ) di file `MobileLayout.jsx`. Padding ini menyisakan ruang kosong di bagian paling bawah halaman, yang besarnya seukuran dengan tinggi Bottom Navigation, sehingga konten dapat di-scroll secara utuh hingga ujung.
+   - KENDALA 3: Model AI Chatbot tidak merespon (Error 400). Saat mengimplementasikan Groq API, API menolak request karena model `llama3-8b-8192` yang dipakai sebelumnya ternyata sudah ditarik (decommissioned) oleh provider.
+     > SOLUSI 3: Melakukan tracing error via terminal (curl command) dan memperbarui payload sistem di `MobileLayout.jsx` untuk menggunakan model generasi terbaru yang didukung secara aktif, yaitu `llama-3.1-8b-instant`. Respon chatbot kini instan dan akurat.
+
+
+--------------------------------------------------------------------------------
+LAMPIRAN: STRUKTUR DIREKTORI KODE PROYEK LENGKAP
+--------------------------------------------------------------------------------
+.
+├── app
+│   ├── Http
+│   │   ├── Controllers
+│   │   │   ├── AdminController.php
+│   │   │   ├── Auth
+│   │   │   │   ├── AuthenticatedSessionController.php
+│   │   │   │   ├── ConfirmablePasswordController.php
+│   │   │   │   ├── EmailVerificationNotificationController.php
+│   │   │   │   ├── EmailVerificationPromptController.php
+│   │   │   │   ├── LocationController.php
+│   │   │   │   ├── NewPasswordController.php
+│   │   │   │   ├── PasswordController.php
+│   │   │   │   ├── PasswordResetLinkController.php
+│   │   │   │   ├── RegisteredUserController.php
+│   │   │   │   └── VerifyEmailController.php
+│   │   │   ├── ContributorController.php
+│   │   │   ├── Controller.php
+│   │   │   ├── DestinationController.php
+│   │   │   ├── MessageController.php
+│   │   │   └── ProfileController.php
+│   │   ├── Middleware
+│   │   │   └── HandleInertiaRequests.php
+│   │   └── Requests
+│   │       ├── Auth
+│   │       │   └── LoginRequest.php
+│   │       └── ProfileUpdateRequest.php
+│   ├── Models
+│   │   ├── DestinationImage.php
+│   │   ├── Destination.php
+│   │   ├── Message.php
+│   │   ├── Review.php
+│   │   └── User.php
+│   └── Providers
+│       └── AppServiceProvider.php
+├── artisan
+├── config
+│   ├── app.php
+│   ├── auth.php
+│   ├── cache.php
+│   ├── database.php
+│   ├── filesystems.php
+│   ├── logging.php
+│   ├── mail.php
+│   ├── queue.php
+│   ├── services.php
+│   └── session.php
+├── database
+│   ├── factories
+│   │   └── UserFactory.php
+│   ├── .gitignore
+│   ├── migrations
+│   │   ├── 0001_01_01_000000_create_users_table.php
+│   │   ├── 0001_01_01_000001_create_cache_table.php
+│   │   ├── 0001_01_01_000002_create_jobs_table.php
+│   │   ├── 2026_04_17_152712_create_destination_images_table.php
+│   │   ├── 2026_04_17_152712_create_destinations_table.php
+│   │   ├── 2026_04_17_152713_create_reviews_table.php
+│   │   ├── 2026_04_18_130706_create_locations_table.php
+│   │   ├── 2026_04_19_000001_fix_schema_columns.php
+│   │   ├── 2026_04_19_030930_create_messages_table.php
+│   │   └── 2026_04_19_030931_add_contact_number_to_destinations_table.php
+│   └── seeders
+│       ├── DatabaseSeeder.php
+│       └── DefaultDestinationsSeeder.php
+├── .editorconfig
+├── .env
+├── .env.example
+├── .gitattributes
+├── .gitignore
+├── Laporan2.txt
+├── laporan.txt
+├── .npmrc
+├── phpunit.xml
+├── postcss.config.js
+├── README.md
+├── resources
+│   ├── css
+│   │   └── app.css
+│   ├── js
+│   │   ├── app.jsx
+│   │   ├── bootstrap.js
+│   │   ├── Components
+│   │   │   ├── ApplicationLogo.jsx
+│   │   │   ├── BaliMap.jsx
+│   │   │   ├── Checkbox.jsx
+│   │   │   ├── DangerButton.jsx
+│   │   │   ├── Dropdown.jsx
+│   │   │   ├── InputError.jsx
+│   │   │   ├── InputLabel.jsx
+│   │   │   ├── Modal.jsx
+│   │   │   ├── NavLink.jsx
+│   │   │   ├── PrimaryButton.jsx
+│   │   │   ├── ResponsiveNavLink.jsx
+│   │   │   ├── SecondaryButton.jsx
+│   │   │   ├── TextInput.jsx
+│   │   │   └── Viewer360.jsx
+│   │   ├── Layouts
+│   │   │   ├── AuthenticatedLayout.jsx
+│   │   │   ├── GuestLayout.jsx
+│   │   │   └── MobileLayout.jsx
+│   │   └── Pages
+│   │       ├── AdminDashboard.jsx
+│   │       ├── Auth
+│   │       │   ├── ConfirmPassword.jsx
+│   │       │   ├── ForgotPassword.jsx
+│   │       │   ├── Login.jsx
+│   │       │   ├── Register.jsx
+│   │       │   ├── ResetPassword.jsx
+│   │       │   └── VerifyEmail.jsx
+│   │       ├── AuthScreen.jsx
+│   │       ├── Dashboard.jsx
+│   │       ├── DestinationDetail.jsx
+│   │       ├── Home.jsx
+│   │       ├── Mailbox.jsx
+│   │       ├── MapScreen.jsx
+│   │       ├── MyBusiness.jsx
+│   │       ├── Profile
+│   │       │   ├── Edit.jsx
+│   │       │   └── Partials
+│   │       │       ├── DeleteUserForm.jsx
+│   │       │       ├── UpdatePasswordForm.jsx
+│   │       │       └── UpdateProfileInformationForm.jsx
+│   │       └── Profile.jsx
+│   └── views
+│       └── app.blade.php
+├── routes
+│   ├── auth.php
+│   ├── console.php
+│   └── web.php
+├── tailwind.config.js
+├── tests
+│   ├── Feature
+│   │   ├── Auth
+│   │   │   ├── AuthenticationTest.php
+│   │   │   ├── EmailVerificationTest.php
+│   │   │   ├── PasswordConfirmationTest.php
+│   │   │   ├── PasswordResetTest.php
+│   │   │   ├── PasswordUpdateTest.php
+│   │   │   └── RegistrationTest.php
+│   │   ├── ExampleTest.php
+│   │   └── ProfileTest.php
+│   ├── TestCase.php
+│   └── Unit
+│       └── ExampleTest.php
+├── vite.config.js
+└── .vscode
+
+31 directories, 116 files
+================================================================================

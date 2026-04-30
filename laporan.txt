@@ -1,0 +1,119 @@
+TUGAS 02
+Lembar Tugas Mandiri (Individu):
+Rancangan Front-End Aplikasi Menggunakan Laravel dan React (Tugas Project UTS)
+
+Mata Kuliah    : Pemrograman Web Berbasis Framework
+Dosen Pengampu : Ir. Gede Surya Mahendra, S.Pd., M.Kom.
+Nama Aplikasi  : Bali Pramana (Digital Ecosystem for Hidden Gems & Local Culinary)
+Teknologi      : Laravel 11, React 18, Inertia.js, Tailwind CSS
+
+================================================================================
+TAHAP 1: PENENTUAN HALAMAN DAN STRUKTUR NAVIGASI
+================================================================================
+
+Aplikasi "Bali Pramana" dirancang sebagai platform ekosistem digital untuk mempromosikan destinasi wisata alam tersembunyi dan kuliner lokal di Bali. Struktur navigasi diatur secara logis berdasarkan peran pengguna (Guest, Contributor, Admin).
+
+Halaman Utama yang Dibangun:
+1. Halaman Login & Register (AuthScreen.jsx): 
+   Pintu masuk utama pengguna. Menggunakan sistem autentikasi Laravel Breeze yang diintegrasikan ke React via Inertia.
+2. Halaman Dashboard (HomeScreen.jsx): 
+   Menampilkan ringkasan statistik (untuk admin/kontributor) atau daftar rekomendasi tempat (untuk user).
+3. Halaman Data Utama (MapScreen.jsx & MyBusiness.jsx): 
+   Visualisasi data melalui peta interaktif (OpenStreetMap) dan daftar bisnis yang dikelola oleh kontributor.
+4. Halaman Form Tambah/Edit Data (MyBusiness.jsx - Form Mode): 
+   Formulir dinamis untuk mengunggah informasi tempat, koordinat, foto reguler, hingga foto 360 derajat.
+5. Halaman Detail Data (DestinationDetail.jsx): 
+   Menampilkan informasi lengkap tempat, Virtual Tour 360 interaktif (Pannellum), galeri foto, dan sistem ulasan.
+6. Halaman Mailbox (Mailbox.jsx): 
+   Sistem komunikasi internal antara Admin dan Kontributor untuk moderasi data.
+
+Alur Navigasi:
+- User masuk melalui AuthScreen.
+- Dashboard menampilkan navigasi utama di bagian bawah (Mobile-first layout).
+- Menu "Explore" mengarah ke MapScreen.
+- Menu "My Business" (khusus Kontributor) mengarah ke pengelolaan data.
+- Tombol aksi pada kartu destinasi mengarah ke DestinationDetail.
+
+================================================================================
+TAHAP 2: IMPLEMENTASI RANCANGAN FRONT-END
+================================================================================
+
+Rancangan front-end diimplementasikan dengan pendekatan "Component-Based Architecture" di dalam folder resources/js/.
+
+Pembagian Komponen:
+- Layouts/MobileLayout.jsx: Komponen induk yang menyediakan navigasi bawah, sidebar, dan header yang konsisten di semua halaman.
+- Components/Viewer360.jsx: Komponen khusus menggunakan library Pannellum untuk menampilkan foto panorama secara interaktif.
+- Components/BaliMap.jsx: Komponen peta menggunakan Leaflet/OpenStreetMap.
+- UI Elements: Penggunaan Tailwind CSS untuk kartu (cards), tombol (buttons), dan modal (modals) yang responsif.
+
+Tata Letak:
+Menggunakan desain yang "clean" dengan dominasi warna hijau (Pramana Green) untuk mencerminkan nuansa alam Bali. Tipografi menggunakan font 'Inter' untuk keterbacaan dan 'Playfair Display' untuk kesan eksklusif pada judul.
+
+================================================================================
+TAHAP 3: DOKUMENTASI SCREENSHOT DAN PENJELASAN KODE
+================================================================================
+
+[Catatan: Screenshot dilampirkan dalam dokumen laporan visual]
+
+1. Penjelasan Struktur Routing (routes/web.php)
+Kode ini menghubungkan URL dengan Controller yang mengirimkan data ke React melalui Inertia.
+Contoh:
+Route::get('/destinations/{slug}', [DestinationController::class, 'show'])->name('destinations.show');
+
+2. Komponen Utama: DestinationDetail.jsx
+Fungsi: Menampilkan detail lengkap destinasi termasuk Virtual Tour 360.
+Potongan Kode Penting:
+```javascript
+const DestinationDetail = ({ destination }) => {
+  return (
+    <MobileLayout>
+      <Viewer360 imageUrl={getImageUrl(destination.images360[0])} />
+      <h1>{destination.name}</h1>
+      <p>{destination.description}</p>
+      {/* Review System */}
+    </MobileLayout>
+  );
+}
+```
+
+3. Penggunaan State & Form: MyBusiness.jsx
+Fungsi: Menangani penambahan data baru menggunakan useForm dari Inertia.
+Potongan Kode Penting:
+```javascript
+const { data, setData, post, processing } = useForm({
+  name: '',
+  location: '',
+  rules: '',
+  image_360: null,
+});
+```
+
+Integrasi Laravel & React:
+Aplikasi ini menggunakan Inertia.js sebagai "bridge". Laravel bertugas sebagai backend API dan routing, sementara React menangani rendering UI secara dinamis (Single Page Application feel) tanpa perlu membangun API terpisah (Resourceful Controllers).
+
+================================================================================
+TAHAP 4: ANALISIS DESAIN ANTARMUKA
+================================================================================
+
+1. Alasan Pemilihan Layout:
+Layout "Mobile-First" dipilih karena target pengguna adalah wisatawan yang cenderung menggunakan smartphone saat mencari lokasi wisata. Navigasi bawah (bottom navigation) memudahkan jempol pengguna menjangkau menu utama.
+
+2. Konsistensi Warna & Navigasi:
+Warna utama Hijau (#16a34a) melambangkan alam, dan Aksen Oranye (#ea580c) melambangkan budaya Bali. Konsistensi dijaga melalui file tailwind.config.js yang mendefinisikan color palette khusus.
+
+3. Kemudahan Penggunaan:
+Fitur 360 Virtual Tour memberikan "preview" nyata kepada pengguna sebelum berkunjung. Sistem filter kategori yang simpel meminimalkan beban kognitif pengguna.
+
+4. Kesesuaian dengan Studi Kasus:
+Platform berhasil memadukan fungsi informatif (peta & detail) dengan fungsi manajerial (dashboard kontributor & admin), sesuai dengan kebutuhan ekosistem digital pariwisata.
+
+5. Kendala & Solusi:
+- Kendala: Integrasi library 360 viewer yang berat dan sering konflik dengan sistem build Vite.
+- Solusi: Menggunakan Pannellum via CDN dan melakukan optimasi "dynamic import" pada komponen React untuk mempercepat loading halaman.
+
+================================================================================
+Laporan dibuat untuk memenuhi Tugas Project UTS Mata Kuliah Pemrograman Web Berbasis Framework.
+================================================================================
+
+
+
