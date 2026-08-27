@@ -147,7 +147,7 @@ const Home = ({ destinations = [] }) => {
 
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
           <p className="text-white/80 text-[10px] md:text-sm font-semibold mb-2 md:mb-3 uppercase tracking-[0.35em]">
-            Selamat Datang di
+            Selamat Datang di Bali Pramana
           </p>
           <h1 className="text-white font-display text-3xl md:text-6xl lg:text-7xl leading-tight mb-3 md:mb-4 drop-shadow-lg">
             Discover Bali's<br />
@@ -156,7 +156,7 @@ const Home = ({ destinations = [] }) => {
             </span>
           </h1>
           <p className="text-white/70 text-[11px] md:text-base max-w-lg leading-relaxed px-4 md:px-0">
-            Jelajahi keindahan wisata alam tersembunyi dan cita rasa kuliner autentik Kabupaten Buleleng.
+            Jelajahi keindahan wisata alam tersembunyi dan cita rasa kuliner autentik di Bali.
           </p>
         </div>
 

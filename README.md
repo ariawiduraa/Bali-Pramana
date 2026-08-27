@@ -1,58 +1,200 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🌿 Bali Pramana
+> **Digital Ecosystem for Hidden Gems & Local Culinary in Bali**
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel)](https://laravel.com)
+[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react)](https://react.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com)
+[![Inertia.js](https://img.shields.io/badge/Inertia.js-1.x-9553E9?style=for-the-badge&logo=inertia)](https://inertiajs.com)
 
-## About Laravel
+**Bali Pramana** adalah platform ekosistem digital cerdas yang dirancang khusus untuk mempromosikan destinasi wisata alam tersembunyi (*Hidden Gems*) dan cita rasa kuliner lokal autentik di Bali. Aplikasi ini dirancang dengan pendekatan *Mobile-First* untuk memudahkan wisatawan menjelajahi keindahan Bali langsung dari smartphone mereka, lengkap dengan integrasi peta interaktif dan *Virtual Tour 360°*.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📸 Preview Aplikasi (Perspektif Kontributor)
+Berikut adalah alur antarmuka aplikasi Bali Pramana dari sudut pandang **Kontributor**. 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+> [!NOTE]
+> **Perbedaan Fitur Antar Peran (Role):**
+> * **User Biasa (Wisatawan)**: Fitur lebih terbatas (hanya bisa menjelajahi beranda, melihat peta, melihat detail/360 virtual tour, memberikan rating/ulasan, dan mengelola profil). Tidak memiliki akses ke menu kelola lapak/bisnis.
+> * **Contributor**: Memiliki seluruh fitur User Biasa ditambah menu **"Lapak Saya"** untuk mendaftarkan destinasi kuliner/wisata alam baru, mengupload foto 360°, serta berinteraksi via **Mailbox** dengan Admin.
+> * **Admin**: Memiliki hak akses penuh untuk melakukan **moderat (menyetujui / menolak)** pengajuan tempat baru dari Kontributor melalui halaman dashboard admin dan membalas pesan moderasi di Mailbox.
 
-## Learning Laravel
+*Silakan simpan file screenshot Anda di dalam folder `screenshots/` dengan nama file yang sesuai di bawah ini:*
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🔐 Alur Registrasi & Masuk
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <b>Halaman Registrasi Kontributor</b><br/>
+      <img src="screenshots/register.png" alt="Register Screen" width="100%"/>
+      <br/><i>Pendaftaran akun kontributor baru (register.png)</i>
+    </td>
+    <td width="50%" align="center">
+      <b>Halaman Masuk (Login)</b><br/>
+      <img src="screenshots/login.png" alt="Login Screen" width="100%"/>
+      <br/><i>Masuk ke ekosistem Bali Pramana (login.png)</i>
+    </td>
+  </tr>
+</table>
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🗺️ Eksplorasi & Peta (Tampilan Utama)
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <b>Beranda Utama (Home)</b><br/>
+      <img src="screenshots/home.png" alt="Home Screen" width="100%"/>
+      <br/><i>Rekomendasi destinasi alam & kuliner di Bali (home.png)</i>
+    </td>
+    <td width="50%" align="center">
+      <b>Peta Interaktif (Map)</b><br/>
+      <img src="screenshots/map.png" alt="Map Screen" width="100%"/>
+      <br/><i>Pencarian lokasi wisata & kuliner terdekat (map.png)</i>
+    </td>
+  </tr>
+</table>
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 💼 Manajemen Lapak & Detail Destinasi
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <b>Kelola Lapak Saya (My Business)</b><br/>
+      <img src="screenshots/lapak.png" alt="Lapak Saya Screen" width="100%"/>
+      <br/><i>Daftar pengajuan tempat & form tambah lapak baru (lapak.png)<br/>
+      💡 <b>Catatan Admin</b>: Pengajuan baru di sini akan muncul di Dashboard Admin untuk di-acc atau ditolak.</i>
+    </td>
+    <td width="50%" align="center">
+      <b>Detail Destinasi & Virtual Tour 360°</b><br/>
+      <img src="screenshots/lapak_detail.png" alt="Lapak Detail Screen" width="100%"/>
+      <br/><i>Tampilan detail tempat beserta fitur ulasan & foto 360° (lapak_detail.png)</i>
+    </td>
+  </tr>
+</table>
 
-## Agentic Development
+### ✉️ Sistem Komunikasi & Profil
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <b>Kotak Masuk (Mailbox)</b><br/>
+      <img src="screenshots/mailbox.png" alt="Mailbox Screen" width="100%"/>
+      <br/><i>Pesan moderasi pengajuan lapak dari Admin (mailbox.png)</i>
+    </td>
+    <td width="50%" align="center">
+      <b>Profil Pengguna (Profile)</b><br/>
+      <img src="screenshots/profile.png" alt="Profile Screen" width="100%"/>
+      <br/><i>Informasi akun kontributor & pengaturan (profile.png)</i>
+    </td>
+  </tr>
+</table>
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
 
+## ✨ Fitur Utama
+- 🌟 **Virtual Tour 360° Interaktif**: Menampilkan foto panorama 360 derajat di halaman detail menggunakan `Pannellum` untuk memberikan *experience* nyata sebelum berkunjung.
+- 🗺️ **Peta Interaktif (OpenStreetMap & Leaflet)**: Navigasi visual untuk mencari lokasi wisata alam dan kuliner lokal terdekat dengan pin penunjuk lokasi.
+- 🔑 **Multi-role Authentication (Laravel Breeze)**: Pembagian akses login berdasarkan peran user:
+  - **Guest/User**: Mencari tempat wisata, melihat peta, menikmati tour 360°, dan menulis ulasan.
+  - **Contributor**: Mengelola bisnis kuliner atau wisata alam milik sendiri, menambahkan ulasan, serta mengajukan tempat baru.
+  - **Admin**: Menyetujui pendaftaran bisnis baru oleh kontributor, mengelola data pengguna, dan mengontrol sistem pesan moderasi.
+- 📬 **Internal Mailbox System**: Fitur kirim pesan terintegrasi antara Admin dan Kontributor untuk mendiskusikan kelayakan data tempat/bisnis yang diajukan.
+- 💬 **Sistem Ulasan (Review & Rating)**: Memungkinkan pengguna memberikan feedback, rating, dan komentar secara real-time pada destinasi.
+
+---
+
+## 🛠️ Tech Stack & Library
+- **Core Framework**: Laravel 11 (PHP 8.2+) & React 18
+- **State & Routing Bridge**: Inertia.js (React Adapter)
+- **Styling**: Tailwind CSS
+- **Interactive Maps**: Leaflet.js & React-Leaflet (OpenStreetMap)
+- **360° Panorama Viewer**: Pannellum Viewer
+- **Database**: MySQL / PostgreSQL
+
+---
+
+## 🚀 Panduan Instalasi Lokal
+
+### 1. Prasyarat
+Pastikan komputer Anda sudah terinstal:
+- PHP >= 8.2
+- Composer
+- Node.js & npm
+- Web Server & Database (XAMPP, Laragon, Docker, dll.)
+
+### 2. Kloning Repositori
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/ariawiduraa/Bali-Pramana.git
+cd Bali-Pramana
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 3. Instalasi Dependency Backend & Frontend
+```bash
+# Instal dependency PHP
+composer install
 
-## Contributing
+# Instal dependency Node.js
+npm install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 4. Konfigurasi Lingkungan (.env)
+Salin berkas `.env.example` ke `.env`:
+```bash
+cp .env.example .env
+```
+Sesuaikan konfigurasi database Anda di dalam berkas `.env`:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=bali_pramana
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Code of Conduct
+### 5. Generate Application Key & Database Migration
+```bash
+# Membuat key aplikasi
+php artisan key:generate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Migrasi tabel database beserta data demo (seeders)
+php artisan migrate --seed
+```
 
-## Security Vulnerabilities
+### 6. Menjalankan Aplikasi
+Buka dua terminal terpisah untuk menjalankan server lokal:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**Terminal 1 (Laravel Server):**
+```bash
+php artisan serve
+```
 
-## License
+**Terminal 2 (Vite Frontend compilation):**
+```bash
+npm run dev
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Aplikasi siap diakses melalui peramban di alamat `http://127.0.0.1:8000`.
+
+---
+
+## 📂 Struktur Folder Front-End Penting
+```text
+resources/js/
+├── Components/         # Komponen React reusable (Peta, 360 Viewer, dll.)
+├── Layouts/            # Tata letak induk (MobileLayout.jsx dengan Bottom Nav)
+├── Pages/              # Halaman-halaman utama aplikasi
+│   ├── AdminDashboard.jsx
+│   ├── AuthScreen.jsx
+│   ├── DestinationDetail.jsx
+│   ├── Home.jsx
+│   ├── Mailbox.jsx
+│   ├── MapScreen.jsx
+│   └── MyBusiness.jsx
+└── app.jsx             # Entry point React
+```
+
+---
+
+## 👤 Informasi Project
+- **Mata Kuliah**: Pemrograman Web Berbasis Framework
+- **Dosen Pengampu**: Ir. Gede Surya Mahendra, S.Pd., M.Kom.
+- **Nama Developer**: Aria Widura
+- **Program Studi**: Teknologi Informasi, Universitas Pendidikan Ganesha
